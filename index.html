@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Bangalore Tech Atlas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -364,16 +365,75 @@
   @media (max-width: 768px) {
     body { flex-direction: column; }
     body.sidebar-open { overflow: hidden; }
-    #sidebar { position: fixed; top: 0; left: -100%; width: 85%; height: 100%; z-index: 2000; transition: left 0.3s ease; overflow: hidden; }
+
+    /* Sidebar slides in from left as a drawer */
+    #sidebar {
+      position: fixed;
+      top: 0; left: -100%;
+      width: 88% !important;
+      max-width: 360px !important;
+      height: 100%;
+      z-index: 2000;
+      transition: left 0.3s ease;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
     #sidebar.open { left: 0; }
     #sidebarToggleBtn { display: none; }
-    #map { width: 100%; height: 100vh; }
     #resizer { display: none; }
-    .toolbar { flex-wrap: wrap; }
+
+    /* Map takes full screen */
+    #map { width: 100%; height: 100vh; }
+
+    /* Search toolbar wraps nicely */
+    .toolbar { flex-wrap: wrap; gap: 6px; }
     .search-box { flex: 1 1 100%; }
+    select#sortOption { flex: 1; }
+
+    /* Map menu repositioned so mobile menu btn doesn't overlap */
+    #mapMenu { top: 16px; right: 16px; }
+
+    /* Full list view chrome becomes scrollable on mobile */
+    .dir-chrome {
+      padding: 0 14px;
+      height: auto;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-top: 12px;
+      padding-bottom: 12px;
+    }
+    .dir-title-wrap { order: -1; flex: 1 1 100%; }
+    .dir-title { font-size: 17px; }
+    .dir-search { width: 100%; }
+    .dir-search:focus { width: 100%; }
+    .dir-search-wrap { flex: 1; }
+    .dir-body { padding: 14px; }
+
+    /* Directory grid becomes single column */
+    .dir-grid { grid-template-columns: 1fr; }
+    .dir-compact { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+
+    /* List rows stack better */
+    .dir-row { flex-wrap: wrap; gap: 8px; padding: 10px 12px; }
+    .dir-row-name { width: auto; flex: 1; }
+    .dir-row-addr { flex: 1 1 100%; }
+    .dir-row-actions { opacity: 1; transform: none; flex: 1 1 100%; justify-content: flex-end; }
+
+    /* Modals full width on mobile */
+    .modal-content { width: 94%; margin: 24px auto; padding: 20px; }
+
+    /* Stats bar wraps */
+    .dir-stats-bar { padding: 10px 14px; flex-wrap: wrap; gap: 12px; }
+
+    /* Toast stays above mobile nav */
+    #toast { bottom: 16px; white-space: normal; max-width: 90%; text-align: center; }
+
+    /* Sidebar header padding */
+    .sidebar-header { padding: 20px 16px 16px; }
+    #companyList { padding: 8px; }
   }
-  #mobileMenuBtn { position: fixed; top: 12px; left: 12px; z-index: 3000; width: 42px; height: 42px; border-radius: 10px; border: none; background: #2563eb; color: white; font-size: 20px; display: none; cursor: pointer; }
-  @media (max-width: 768px) { #mobileMenuBtn { display: flex; align-items: center; justify-content: center; } }
+  #mobileMenuBtn { position: fixed; top: 14px; left: 14px; z-index: 3000; width: 44px; height: 44px; border-radius: 12px; border: none; background: #2563eb; color: white; font-size: 20px; display: none; cursor: pointer; box-shadow: 0 4px 16px rgba(37,99,235,0.4); align-items: center; justify-content: center; }
+  @media (max-width: 768px) { #mobileMenuBtn { display: flex; } }
   #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1500; display: none; }
   #sidebar.open ~ #overlay { display: block; }
 
