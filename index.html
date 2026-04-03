@@ -395,18 +395,23 @@
 
     /* Full list view chrome becomes scrollable on mobile */
     .dir-chrome {
-      padding: 0 14px;
+      padding: 10px 14px;
       height: auto;
       flex-wrap: wrap;
-      gap: 10px;
-      padding-top: 12px;
-      padding-bottom: 12px;
+      gap: 8px;
+      align-items: center;
     }
-    .dir-title-wrap { order: -1; flex: 1 1 100%; }
-    .dir-title { font-size: 17px; }
+    /* Row 1: Back button left, title+count center, view-toggle right */
+    .dir-back-btn { order: 1; flex-shrink: 0; width: 36px; height: 36px; padding: 0; justify-content: center; }
+    .dir-title-wrap { order: 2; flex: 1 1 0; min-width: 0; }
+    .dir-view-toggle { order: 3; flex-shrink: 0; }
+    /* Row 2: search full width */
+    .dir-search-wrap { order: 4; flex: 1 1 100%; width: 100%; }
+    .dir-sort { order: 5; flex-shrink: 0; }
+    .dir-title { font-size: 15px; gap: 6px; }
+    .dir-count-pill { font-size: 10px; }
     .dir-search { width: 100%; }
     .dir-search:focus { width: 100%; }
-    .dir-search-wrap { flex: 1; }
     .dir-body { padding: 14px; }
 
     /* Directory grid becomes single column */
@@ -432,8 +437,9 @@
     .sidebar-header { padding: 20px 16px 16px; }
     #companyList { padding: 8px; }
   }
-  #mobileMenuBtn { position: fixed; top: 14px; left: 14px; z-index: 3000; width: 44px; height: 44px; border-radius: 12px; border: none; background: #2563eb; color: white; font-size: 20px; display: none; cursor: pointer; box-shadow: 0 4px 16px rgba(37,99,235,0.4); align-items: center; justify-content: center; }
-  @media (max-width: 768px) { #mobileMenuBtn { display: flex; } }
+  #mobileMenuBtn { display: none; cursor: pointer; transition: background 0.18s, color 0.18s; }
+  @media (max-width: 768px) { #mobileMenuBtn { display: flex; } #mapMenuDesktop { display: none !important; } }
+  @media (min-width: 769px) { #mapMenu { display: none !important; } #mapMenuDesktop { display: block; } }
   #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1500; display: none; }
   #sidebar.open ~ #overlay { display: block; }
 
@@ -482,14 +488,15 @@
   .dir-back-btn svg { display: block; flex-shrink: 0; }
 
   .dir-title-wrap { flex: 1; min-width: 0; }
+  .dir-eyebrow { font-family: 'Instrument Sans', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--accent2); margin-bottom: 2px; }
   .dir-title { font-family: 'Cabinet Grotesk', sans-serif; font-size: 20px; font-weight: 900; color: var(--text); letter-spacing: -0.3px; display: flex; align-items: baseline; gap: 10px; }
   .dir-count-pill { font-size: 11px; font-weight: 700; background: rgba(37,99,235,0.08); color: var(--accent); border: 1px solid rgba(37,99,235,0.18); padding: 2px 9px; border-radius: 20px; letter-spacing: 0; }
 
-  .dir-search-wrap { position: relative; display: flex; align-items: center; flex-shrink: 0; }
+  .dir-search-wrap { position: relative; display: flex; align-items: center; flex: 1; }
   .dir-search-wrap svg { position: absolute; left: 11px; color: var(--text3); pointer-events: none; }
-  .dir-search { height: 36px; width: 220px; padding: 0 12px 0 34px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; font-family: inherit; font-size: 13px; color: var(--text); outline: none; transition: all 0.2s; }
+  .dir-search { height: 36px; width: 100%; padding: 0 12px 0 34px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; font-family: inherit; font-size: 13px; color: var(--text); outline: none; transition: all 0.2s; }
   .dir-search::placeholder { color: var(--text3); }
-  .dir-search:focus { border-color: rgba(37,99,235,0.3); background: #fff; width: 260px; }
+  .dir-search:focus { border-color: rgba(37,99,235,0.3); background: #fff; width: 100%; }
 
   .dir-view-toggle { display: flex; background: var(--surface2); border: 1px solid var(--border2); border-radius: 9px; padding: 3px; gap: 2px; flex-shrink: 0; }
   .dir-view-btn { width: 30px; height: 28px; border: none; border-radius: 6px; background: transparent; color: var(--text3); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
@@ -682,10 +689,95 @@ body.dark {
   transform: scale(1.1);
   opacity: 0.7;
 }
+
+  /* ── MAP TITLE BAR (mobile home screen) ── */
+  #mapTitleBar { display: none; }
+
+  @media (max-width: 768px) {
+    #mapTitleBar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 52px;
+      padding: 0 10px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      z-index: 1800;
+    }
+    #mapTitleBar .map-title-text {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: -0.3px;
+      color: var(--text);
+      pointer-events: none;
+      flex: 1;
+      text-align: center;
+    }
+    #mapTitleBar .map-title-text span {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    /* The sidebar toggle btn inside title bar */
+    #mobileMenuBtn {
+      position: static;
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      background: var(--surface2);
+      color: var(--text2);
+      border: 1px solid var(--border2);
+      box-shadow: none;
+      font-size: 18px;
+      opacity: 1;
+      pointer-events: auto;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      padding: 0;
+    }
+    body.sidebar-open #mobileMenuBtn,
+    body.list-view-open #mobileMenuBtn { opacity: 1 !important; pointer-events: auto !important; }
+    /* Map menu inside title bar */
+    #mapMenu {
+      position: static;
+      flex-shrink: 0;
+    }
+    #mapMenuBtn {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      box-shadow: none;
+    }
+    #mapMenuDesktop { display: none !important; }
+    /* Push map down */
+    #map { height: calc(100vh - 52px) !important; margin-top: 52px; }
+    /* Hide title bar when list view is open */
+    body.list-view-open #mapTitleBar { display: none; }
+    /* Dim the hamburger when sidebar is open (sidebar has its own close mechanism via overlay) */
+    body.sidebar-open #mobileMenuBtn { opacity: 0.4; }
+  }
 </style>
 </head>
 <body>
-  <button id="mobileMenuBtn" onclick="toggleSidebar()">☰</button>
+  <div id="mapTitleBar">
+    <button id="mobileMenuBtn" onclick="toggleSidebar()">☰</button>
+    <span class="map-title-text">Bengaluru <span>Tech Atlas</span></span>
+    <div id="mapMenu">
+      <button id="mapMenuBtn" onclick="toggleMapMenu()" title="Menu">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="5"  r="1.5" fill="currentColor" stroke="none"/>
+          <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+          <circle cx="12" cy="19" r="1.5" fill="currentColor" stroke="none"/>
+        </svg>
+      </button>
+    </div>
+  </div>
 
   <div id="sidebar">
     <div id="resizer"></div>
@@ -763,14 +855,12 @@ body.dark {
   <!-- FULL LIST VIEW -->
   <div id="fullListView">
     <div class="dir-chrome">
-      <button class="dir-back-btn" onclick="toggleViewMode()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-        Back to Map
+      <button class="dir-back-btn" onclick="toggleViewMode()" title="Back to Map">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
       </button>
       <div class="dir-title-wrap">
         <div class="dir-title">
-          Company Directory
-          <span class="dir-count-pill" id="dirCountPill">0</span>
+          Directory
         </div>
       </div>
       <div class="dir-search-wrap">
@@ -795,16 +885,12 @@ body.dark {
     </div>
   </div>
 
-  <!-- Map menu -->
-  <div id="mapMenu">
-    <button id="mapMenuBtn" onclick="toggleMapMenu()" title="Menu">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-        <circle cx="12" cy="5"  r="1.5" fill="currentColor" stroke="none"/>
-        <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
-        <circle cx="12" cy="19" r="1.5" fill="currentColor" stroke="none"/>
-      </svg>
-    </button>
-    <div id="mapMenuDropdown" class="hidden">
+  <!-- Map menu desktop (mobile button is in title bar) -->
+  <div id="mapMenuDesktop" style="position:absolute;top:16px;right:16px;z-index:900;">
+    <button id="mapMenuBtnDesktop" onclick="toggleMapMenu()" title="Menu" style="width:40px;height:40px;background:var(--surface);border:1px solid var(--border2);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);box-shadow:0 4px 16px rgba(30,60,140,0.1);transition:all 0.18s;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="5" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="19" r="1.5" fill="currentColor" stroke="none"/></svg></button>
+  </div>
+  <!-- Shared dropdown (positioned via JS/CSS per context) -->
+  <div id="mapMenuDropdown" class="hidden" style="position:fixed;z-index:9000;">
       <div class="menu-section-label">Storage</div>
       <button class="menu-item" onclick="openGistModal(); closeMapMenu()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
@@ -833,7 +919,6 @@ body.dark {
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15h6M9 11h6M9 19h4"/></svg>
         Export PDF
       </button>
-    </div>
   </div>
   <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="handleImport(event)">
 
@@ -1187,11 +1272,13 @@ function toggleViewMode() {
     mapEl.style.display = "none";
     sidebarEl.style.display = "none";
     listView.style.display = "flex";
+    document.body.classList.add('list-view-open');
     renderFullList();
   } else {
     mapEl.style.display = "block";
     sidebarEl.style.display = "flex";
     listView.style.display = "none";
+    document.body.classList.remove('list-view-open');
     setTimeout(() => map.invalidateSize(), 200);
   }
 }
@@ -1230,8 +1317,6 @@ function getSortedList(list) {
 
 function renderFullListItems(list) {
   const container = document.getElementById('dirListContainer');
-  const pill = document.getElementById('dirCountPill');
-  pill.textContent = list.length;
   if (list.length === 0) { container.innerHTML = `<div class="dir-empty"><div class="dir-empty-icon">🔍</div><p>No companies match your search.</p></div>`; return; }
   const sorted = getSortedList(list);
   if (dirViewMode === 'grid') renderGridView(sorted, container);
@@ -1348,9 +1433,23 @@ function exportData() { const blob = new Blob([JSON.stringify(companies, null, 2
 function showToast(msg, showUndo = false) { const t = document.getElementById('toast'); document.getElementById('toastMsg').textContent = msg; const u = document.getElementById('toastUndo'); u.style.display = showUndo ? 'inline-block' : 'none'; t.style.display = 'flex'; clearTimeout(t._timeout); t._timeout = setTimeout(() => { t.style.display = 'none'; u.style.display = 'none'; }, showUndo ? 5000 : 3000); }
 function hideToast() { const t = document.getElementById('toast'); clearTimeout(t._timeout); t.style.display = 'none'; }
 
-function toggleMapMenu() { document.getElementById('mapMenuDropdown').classList.toggle('hidden'); }
+function toggleMapMenu() {
+  const dropdown = document.getElementById('mapMenuDropdown');
+  const isMobile = window.innerWidth <= 768;
+  if (dropdown.classList.contains('hidden')) {
+    // Position it under the correct button
+    const btn = isMobile
+      ? document.getElementById('mapMenuBtn')
+      : document.getElementById('mapMenuBtnDesktop');
+    const rect = btn.getBoundingClientRect();
+    dropdown.style.top = (rect.bottom + 8) + 'px';
+    dropdown.style.right = (window.innerWidth - rect.right) + 'px';
+    dropdown.style.left = 'auto';
+  }
+  dropdown.classList.toggle('hidden');
+}
 function closeMapMenu() { document.getElementById('mapMenuDropdown').classList.add('hidden'); }
-document.addEventListener('click', (e) => { const menu = document.getElementById('mapMenu'); if (menu && !menu.contains(e.target)) closeMapMenu(); });
+document.addEventListener('click', (e) => { const dropdown = document.getElementById('mapMenuDropdown'); const btnMobile = document.getElementById('mapMenuBtn'); const btnDesktop = document.getElementById('mapMenuBtnDesktop'); if (dropdown && !dropdown.classList.contains('hidden')) { if (!dropdown.contains(e.target) && (!btnMobile || !btnMobile.contains(e.target)) && (!btnDesktop || !btnDesktop.contains(e.target))) closeMapMenu(); } });
 
 function getGistCreds() { return { token: localStorage.getItem('gist_token') || '', id: localStorage.getItem('gist_id') || '' }; }
 function updateGistStatusDot() { const dot = document.getElementById('gistStatusDot'); if (!dot) return; const { token, id } = getGistCreds(); dot.className = (token && id) ? 'connected' : ''; }
